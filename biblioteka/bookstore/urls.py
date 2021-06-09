@@ -6,6 +6,8 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
 
+path('download_pdf', views.download_pdf),
+
 # Shared URL's
  path('', views.login_form, name='home'),
  path('login/', views.loginView, name='login'),
@@ -81,7 +83,7 @@ urlpatterns = [
  path('uabout/', views.raport, name='raport'),
  path('search/', views.usearch, name='search'),
 
-
+path('marketing/', views.marketing, name='marketing'),
 
 
 

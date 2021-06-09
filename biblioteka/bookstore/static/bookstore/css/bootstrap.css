@@ -11,6 +11,7 @@ html {
       -ms-text-size-adjust: 100%;
 }
 body {
+  background-color: burlywood;
   margin: 0;
 }
 article,

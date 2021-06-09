@@ -19,6 +19,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.db.models import Count
+from django.http import HttpResponse
+from wsgiref.util import FileWrapper
+import os
 
 
 
@@ -45,8 +48,10 @@ def loginView(request):
 				return redirect('librarian')
 			elif user.is_publisher:
 			    return redirect('publisher')
+			elif user.is_publisher:
+			    return redirect('user')
 			else: 
-				return redirect('user')
+				return redirect('marketing')
 		else:
 		    messages.info(request, "Nieprawidłowa nazwa użytkownika lub hasło")
 		    return redirect('home')
@@ -533,7 +538,14 @@ class LListChat(LoginRequiredMixin, ListView):
 
 
 
-
+@login_required
+def download_pdf(request):
+    filename = "bookstore\media\bookapp\pdfs\Raport stan czytelnictwa w 2020 roku.pdf.pdf"
+    content = FileWrapper(filename)
+    response = HttpResponse(content, content_type='application/pdf')
+    response['Content-Length'] = os.path.getsize(filename)
+    response['Content-Disposition'] = 'attachment; filename=%s' % 'whatever_name_will_appear_in_download.pdf'
+    return response
 
 
 
@@ -551,7 +563,7 @@ def dashboard(request):
 	return render(request, 'dashboard/home.html', context)
 
 def create_user_form(request):
-    choice = ['1', '0', 'Publisher', 'Admin', 'Librarian', 'User']
+    choice = ['1', '0', 'Publisher', 'Admin', 'Librarian', 'User', 'Marketing']
     choice = {'choice': choice}
 
     return render(request, 'dashboard/add_user.html', choice)
@@ -581,7 +593,7 @@ class ListUserView(generic.ListView):
         return User.objects.order_by('-id')
 
 def create_user(request):
-	choice = ['1', '0', 'Publisher', 'Admin', 'Librarian', 'User']
+	choice = ['1', '0', 'Publisher', 'Admin', 'Librarian', 'User', 'Marketing']
 	choice = {'choice': choice}
 	if request.method == 'POST':
 		first_name=request.POST['first_name']
@@ -610,6 +622,11 @@ def create_user(request):
 			return redirect('aluser')
 		elif userType == "User":
 			a = User(first_name=first_name, last_name=last_name, username=username, email=email, password=password, is_user=True)
+			a.save()
+			messages.success(request, 'Member was created successfully!')
+			return redirect('aluser')
+		elif userType == "Marketing":
+			a = User(first_name=first_name, last_name=last_name, username=username, email=email, password=password, is_marketing=True)
 			a.save()
 			messages.success(request, 'Member was created successfully!')
 			return redirect('aluser')
@@ -654,6 +671,8 @@ class AListChat(LoginRequiredMixin, ListView):
 def aabook_form(request):
 	return render(request, 'dashboard/add_book.html')
 
+def marketing(request):
+	return render(request, 'marketing/base.html')
 
 @login_required
 def aabook(request):

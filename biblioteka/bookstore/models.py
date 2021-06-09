@@ -15,6 +15,7 @@ class User(AbstractUser):
     is_publisher = models.BooleanField(default=False)
     is_librarian = models.BooleanField(default=False)
     is_user = models.BooleanField(default=False)
+    is_marketing = models.BooleanField(default=False)
 
 
     class Meta:
@@ -35,7 +36,6 @@ class Book(models.Model):
         return self.title
 
     def delete(self, *args, **kwargs):
-        self.pdf.delete()
         self.cover.delete()
         super().delete(*args, **kwargs)        
 
