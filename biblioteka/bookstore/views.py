@@ -48,7 +48,7 @@ def loginView(request):
 				return redirect('librarian')
 			elif user.is_publisher:
 			    return redirect('publisher')
-			elif user.is_publisher:
+			elif user.is_user:
 			    return redirect('user')
 			else: 
 				return redirect('marketing')
@@ -259,7 +259,7 @@ class PBookListView(LoginRequiredMixin,ListView):
 	model = Book
 	template_name = 'publisher/book_list.html'
 	context_object_name = 'books'
-	paginate_by = 2
+	paginate_by = 5
 
 	def get_queryset(self):
 		return Book.objects.order_by('-id')
@@ -268,7 +268,7 @@ class UBookListView(LoginRequiredMixin,ListView):
 	model = Book
 	template_name = 'user/book_list.html'
 	context_object_name = 'books'
-	paginate_by = 2
+	paginate_by = 5
 
 	def get_queryset(self):
 		return Book.objects.order_by('-id')
@@ -392,7 +392,7 @@ class LBookListView(LoginRequiredMixin,ListView):
 	model = Book
 	template_name = 'librarian/book_list.html'
 	context_object_name = 'books'
-	paginate_by = 3
+	paginate_by = 5
 
 	def get_queryset(self):
 		return Book.objects.order_by('-id')
@@ -402,7 +402,7 @@ class LManageBook(LoginRequiredMixin,ListView):
 	model = Book
 	template_name = 'librarian/manage_books.html'
 	context_object_name = 'books'
-	paginate_by = 3
+	paginate_by = 5
 
 	def get_queryset(self):
 		return Book.objects.order_by('-id')
